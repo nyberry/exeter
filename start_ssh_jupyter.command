@@ -50,34 +50,32 @@
 #   Nick Berry, 2025 - github.com/nyberry
 ###############################################################################
 
+#!/bin/bash
 
 # === USER CONFIGURATION =====================================================
-LOCAL_DIR=~/Desktop/Exeter            # Local working folder
-SSH_KEY="$LOCAL_DIR/nb770.pem"        # Path to SSH private key
-REMOTE_HOST="ubuntu@10.121.4.67"      # Remote username@host
-CONDA_ENV="hds_code"                  # Remote Conda environment
-BASE_PORT=4569                        # Preferred starting port
+LOCAL_DIR=~/Desktop/Exeter
+SSH_KEY="$LOCAL_DIR/nb770.pem"
+REMOTE_HOST="ubuntu@10.121.4.67"
+CONDA_ENV="hds_code"
+BASE_PORT=4569
+LOGFILE="$LOCAL_DIR/jupyter_output.log"
 ###############################################################################
 
 # Step 1 — Start Jupyter remotely and write output to a local log
 osascript -e "tell application \"Terminal\" to do script \"
 cd $LOCAL_DIR;
-ssh -i $SSH_KEY $REMOTE_HOST -t \\\"bash -i -c 'conda activate \
-$CONDA_ENV && jupyter lab --no-browser --port=$BASE_PORT'\\\" | \
-tee $LOCAL_DIR/jupyter_output.log\""
+ssh -i $SSH_KEY $REMOTE_HOST -t \\\"bash -i -c '\\''conda activate $CONDA_ENV && jupyter lab --no-browser --port=$BASE_PORT'\\''\\\" | tee $LOGFILE\""
 
 # Step 2 — Wait for Jupyter to start and detect which port it chose
 echo \"Waiting for Jupyter to choose its port...\"
-LOGFILE=$LOCAL_DIR/jupyter_output.log
 PORT=\"\"
 TOKEN_URL=\"\"
 
 for i in {1..60}; do
     if [ -f \"$LOGFILE\" ]; then
-        PORT=$(grep -m1 -Eo 'localhost:[0-9]+' \"$LOGFILE\" | \
-            cut -d: -f2)
+        PORT=$(grep -m1 -Eo 'localhost:[0-9]+' \"$LOGFILE\" | cut -d: -f2)
         TOKEN_URL=$(grep -m1 -Eo \
-            'http://(localhost|127\.0\.0\.1):[0-9]+/lab\?token=[a-z0-9]+' \
+            'http://(localhost|127\\.0\\.0\\.1):[0-9]+/lab\\?token=[a-z0-9]+' \
             \"$LOGFILE\")
         if [[ -n \"$PORT\" && \"$TOKEN_URL\" == *token=* ]]; then
             break
@@ -96,8 +94,7 @@ fi
 # Step 3 — Open a new terminal tab with matching SSH tunnel
 osascript -e "tell application \"Terminal\" to do script \"
 cd $LOCAL_DIR;
-ssh -i $SSH_KEY -CNL localhost:${PORT}:localhost:${PORT} \
-$REMOTE_HOST\""
+ssh -i $SSH_KEY -CNL localhost:${PORT}:localhost:${PORT} $REMOTE_HOST\""
 
 # Step 4 — Wait until the tunnel port is listening, then open browser
 echo \"Waiting for SSH tunnel...\"
@@ -110,8 +107,7 @@ if [[ \"$TOKEN_URL\" == *token=* ]]; then
     echo \"🌐 Opening $TOKEN_URL\"
     open \"$TOKEN_URL\"
 else
-    echo \"⚠️  Could not find token URL automatically — copy from \
-Jupyter terminal.\"
+    echo \"⚠️  Could not find token URL automatically — copy from Jupyter terminal.\"
 fi
 
 # Step 5 — Clean up: delete the local log file
