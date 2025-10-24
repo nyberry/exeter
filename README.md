@@ -9,23 +9,10 @@
 A personal collection of notebooks and helper scripts created during the MSc in Health Data Science at the
 University of Exeter.
 
-These materials include Jupyter notebooks used for coursework and
-experiments, automation scripts, and supporting assets such as diagrams and example data.
-
 ---
 
 ## Repository Structure
 
-**Folder overview**
-
-- `notebooks/` — Workshops, assignments, and experiments (`.ipynb`)
-- `scripts/` — Helper scripts (Python, Bash, `.command` files)
-- `data/` — Small example datasets (<10 MB)
-- `assets/` — Images, icons, and CSS used in notebooks/docs
-- `docs/` — Technical notes
-- `misc/` — References, drafts, or archived material
-
-**Repo Structure**
 
 ~~~
 exeter-hds-resources/
