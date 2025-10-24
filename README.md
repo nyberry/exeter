@@ -1,4 +1,4 @@
-# Exeter Health Data Science — Resources
+# Health Data Science Resources
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://www.exeter.ac.uk/v8media/recruitmentsites/images/homepage/uoe-logo.svg">
@@ -30,12 +30,9 @@ experiments, automation scripts, and supporting assets such as diagrams and exam
 ~~~
 exeter-hds-resources/
 ├── notebooks/
-│   ├── workshops/
-│   ├── assignments/
-│   └── experiments/
+│   ├── HPDM139/
+│   └── HPDM172/
 ├── scripts/
-│   ├── start_jupyter.command
-│   └── setup_env.sh
 ├── data/
 ├── assets/
 │   ├── images/
